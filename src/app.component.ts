@@ -25,12 +25,15 @@ import { PricingComponent } from './components/pricing/pricing.component';
 
 type View = 'today' | 'inbox' | 'leads' | 'pipeline' | 'proposals' | 'contracts' | 'dashboard' | 'team' | 'settings' | 'integrations';
 type Theme = 'light' | 'dark';
-type PublicComponent = LandingComponent | FeaturesComponent | PricingComponent;
+type PublicComponent = {
+  loginRequest?: { subscribe: (handler: () => void) => void };
+};
 
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,

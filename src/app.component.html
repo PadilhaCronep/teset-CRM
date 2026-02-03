@@ -60,7 +60,12 @@
               </nav>
             </div>
             <div class="flex-shrink-0 flex border-t border-slate-700 dark:border-slate-800 p-2">
-              <button (click)="isSidebarCollapsed.set(!isSidebarCollapsed())" class="flex-shrink-0 group w-full p-2 rounded-md text-slate-300 hover:bg-slate-700/50 hover:text-white">
+              <button
+                (click)="isSidebarCollapsed.set(!isSidebarCollapsed())"
+                type="button"
+                [attr.aria-label]="isSidebarCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+                class="flex-shrink-0 group w-full p-2 rounded-md text-slate-300 hover:bg-slate-700/50 hover:text-white"
+              >
                 <div class="flex items-center" [class.justify-center]="isSidebarCollapsed()">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-slate-400 group-hover:text-slate-300 transition-transform duration-300" [class.rotate-180]="isSidebarCollapsed()">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -87,7 +92,12 @@
             <div class="ml-4 flex items-center md:ml-6 space-x-4">
               <!-- Workspace Menu -->
               <div class="relative">
-                <button (click)="showWorkspaceMenu.set(!showWorkspaceMenu())" class="p-1 rounded-full text-text-secondary dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none">
+                <button
+                  (click)="showWorkspaceMenu.set(!showWorkspaceMenu())"
+                  type="button"
+                  aria-label="Workspace actions"
+                  class="p-1 rounded-full text-text-secondary dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M2.5 4A1.5 1.5 0 0 0 1 5.5v2A1.5 1.5 0 0 0 2.5 9h15A1.5 1.5 0 0 0 19 7.5v-2A1.5 1.5 0 0 0 17.5 4h-15ZM1.5 12a.5.5 0 0 1 .5-.5h16a.5.5 0 0 1 0 1h-16a.5.5 0 0 1-.5-.5Z" clip-rule="evenodd" /></svg>
                 </button>
                 @if(showWorkspaceMenu()) {
@@ -108,7 +118,12 @@
               </div>
 
               <!-- Theme Toggle -->
-              <button (click)="toggleTheme()" class="p-1 rounded-full text-text-secondary dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none">
+              <button
+                (click)="toggleTheme()"
+                type="button"
+                aria-label="Toggle theme"
+                class="p-1 rounded-full text-text-secondary dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none"
+              >
                   @if(theme() === 'light') {
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" /></svg>
                   } @else {
