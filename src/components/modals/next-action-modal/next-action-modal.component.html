@@ -1,0 +1,48 @@
+
+<div class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity" (click)="onClose()">
+  <div class="bg-card dark:bg-slate-800 rounded-lg shadow-xl p-6 w-full max-w-lg mx-4" (click)="$event.stopPropagation()">
+    <div class="flex justify-between items-start">
+        <div>
+            <h2 class="text-xl font-bold text-text-primary dark:text-slate-100">{{ modalTitle() }}</h2>
+            <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">To keep momentum, every deal move requires a clear next step.</p>
+        </div>
+        <button (click)="onClose()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">&times;</button>
+    </div>
+    
+    <div class="mt-6 space-y-4">
+      <div>
+        <label for="action-description" class="block text-sm font-medium text-text-secondary dark:text-slate-300">Next Action</label>
+        <input type="text" id="action-description" [(ngModel)]="nextActionDescription" placeholder="e.g., Follow-up call to discuss pricing" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="action-due-date" class="block text-sm font-medium text-text-secondary dark:text-slate-300">Due Date</label>
+          <input type="date" id="action-due-date" [(ngModel)]="nextActionDueDate" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+        </div>
+
+        <div>
+          <label for="action-channel" class="block text-sm font-medium text-text-secondary dark:text-slate-300">Channel</label>
+          <select id="action-channel" [(ngModel)]="nextActionChannel" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+            <option>WhatsApp</option>
+            <option>Call</option>
+            <option>Email</option>
+          </select>
+        </div>
+      </div>
+
+      @if(formError) {
+        <p class="text-sm text-red-600 dark:text-red-400 font-medium p-3 bg-red-50 dark:bg-red-900/30 rounded-md border border-red-200 dark:border-red-800">{{ formError }}</p>
+      }
+    </div>
+
+    <div class="mt-8 flex justify-end space-x-3">
+      <button type="button" (click)="onClose()" class="bg-card dark:bg-slate-700 py-2 px-4 border border-border dark:border-slate-600 rounded-md shadow-sm text-sm font-medium text-text-primary dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+        Cancel
+      </button>
+      <button type="button" (click)="onSave()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+        Set Action & Move
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,189 @@
+
+<div class="space-y-8">
+  <!-- Header & Customization Controls -->
+  <div class="flex flex-col sm:flex-row justify-between sm:items-start">
+    <div>
+      <h1 class="text-3xl font-bold text-text-primary dark:text-slate-100">Executive Command Center</h1>
+      <p class="mt-1 text-sm text-text-secondary dark:text-slate-400">Your real-time decision support and revenue execution cockpit.</p>
+    </div>
+    <div class="mt-4 sm:mt-0 flex items-center space-x-2">
+      <button (click)="isCustomizeMode.set(!isCustomizeMode())" class="px-3 py-2 text-sm font-semibold rounded-md flex items-center" [class]="isCustomizeMode() ? 'bg-primary text-white' : 'bg-card dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-1.5"><path d="M10 3.75a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM10 8.75a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM10 13.75a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z" /></svg>
+        {{ isCustomizeMode() ? 'Done' : 'Customize' }}
+      </button>
+      @if(isCustomizeMode()) {
+        <button (click)="showAddWidgetModal.set(true)" class="px-3 py-2 text-sm font-semibold rounded-md bg-card dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600">
+          Add Widget
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- AI Executive Summary (Pinned) -->
+  <div class="bg-primary/10 dark:bg-slate-800 border-l-4 border-primary dark:border-indigo-500 p-5 rounded-lg flex items-start space-x-4">
+    <div class="flex-shrink-0">
+       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-6 h-6 text-primary dark:text-indigo-400"><path d="M10 2a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 2ZM10 15a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 15ZM10 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM5.432 4.067a.75.75 0 0 1 1.06-1.06l1.061 1.06a.75.75 0 0 1-1.06 1.06l-1.06-1.06ZM13.48 12.42a.75.75 0 0 1 1.06-1.06l1.06 1.06a.75.75 0 0 1-1.06 1.06l-1.06-1.06ZM2 10a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 2 10ZM15 10a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 15 10ZM5.432 15.933a.75.75 0 0 1-1.06-1.06l1.06-1.061a.75.75 0 1 1 1.06 1.06l-1.06 1.061ZM13.48 7.58a.75.75 0 0 1-1.06-1.06l1.06-1.06a.75.75 0 0 1 1.06 1.06l-1.06 1.06Z" /></svg>
+    </div>
+    <div>
+      <h3 class="font-bold text-lg text-text-primary dark:text-slate-100">{{ aiExecutiveSummary().title }}</h3>
+      <p class="text-sm text-text-secondary dark:text-slate-300">{{ aiExecutiveSummary().message }}</p>
+    </div>
+  </div>
+
+  <!-- Widget Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    @for(widget of dashboardWidgets(); track widget.id) {
+      <div [draggable]="isCustomizeMode()" (dragstart)="onWidgetDragStart(widget)" (dragend)="onWidgetDragEnd()" (drop)="onWidgetDrop(widget)" (dragover)="$event.preventDefault()"
+           class="relative bg-card dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-border dark:border-slate-700"
+           [class.col-span-2]="widget.colSpan === 2"
+           [class.is-dragging]="draggedWidget()?.id === widget.id"
+           [class.cursor-grab]="isCustomizeMode()">
+        
+        @if(isCustomizeMode()) {
+          <div class="absolute -top-3 -right-3">
+            <button (click)="removeWidget(widget.id)" class="h-7 w-7 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600">&times;</button>
+          </div>
+        }
+
+        @switch (widget.id) {
+          @case ('kpi_pipeline') {
+            <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Active Pipeline</h3>
+            <p class="mt-1 text-3xl font-bold text-text-primary dark:text-white">${{ pipelineValue().toLocaleString() }}</p>
+            <p class="text-xs text-info mt-1">AI Insight: Stagnant in Proposal Sent stage.</p>
+            <button class="mt-3 text-xs font-bold text-primary dark:text-indigo-400 hover:underline">View Stalled Deals</button>
+          }
+          @case ('kpi_forecast') {
+            <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Forecasted Revenue</h3>
+            <p class="mt-1 text-3xl font-bold text-text-primary dark:text-white">${{ forecastedRevenue().toLocaleString() }}</p>
+            <p class="text-xs text-info mt-1">AI Insight: Based on current deal stages.</p>
+            <button class="mt-3 text-xs font-bold text-primary dark:text-indigo-400 hover:underline">See Full Forecast</button>
+          }
+          @case ('kpi_gap') {
+            <h3 class="text-sm font-semibold" [class]="gapToGoal() > 0 ? 'text-amber-800 dark:text-amber-400' : 'text-green-800 dark:text-green-400'">
+              {{ gapToGoal() > 0 ? 'Remaining to hit goal' : 'Exceeding goal by' }}
+            </h3>
+            <p class="mt-1 text-3xl font-bold" [class]="gapToGoal() > 0 ? 'text-amber-900 dark:text-amber-300' : 'text-green-900 dark:text-green-300'">${{ Math.abs(forecastedRevenue() - monthlyGoal()).toLocaleString() }}</p>
+            <p class="text-xs mt-1" [class]="gapToGoal() > 0 ? 'text-amber-700 dark:text-amber-500' : 'text-green-700 dark:text-green-500'">
+              {{ gapToGoal() > 0 ? 'AI Insight: Focus on Negotiation stage' : 'AI Insight: Excellent performance!' }}
+            </p>
+            <button class="mt-3 text-xs font-bold text-primary dark:text-indigo-400 hover:underline">Analyze Gap</button>
+          }
+           @case ('kpi_win_rate') {
+            <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Win Rate</h3>
+            <p class="mt-1 text-3xl font-bold text-text-primary dark:text-white">{{ closeRate().toFixed(0) }}<span class="text-xl text-slate-400 dark:text-slate-500">%</span></p>
+            <p class="text-xs text-info mt-1">AI Insight: Slightly below benchmark of 30%.</p>
+            <button class="mt-3 text-xs font-bold text-primary dark:text-indigo-400 hover:underline">Review Lost Deals</button>
+          }
+          @case ('forecast_simulator') {
+            <h2 class="text-xl font-bold text-text-primary dark:text-slate-100">Forecast & Scenario Simulation</h2>
+            <div class="mt-4">
+              <label class="text-sm font-medium text-text-secondary dark:text-slate-400 mr-2">View Scenario:</label>
+              <select (change)="activeScenario.set($any($event.target).value)" class="rounded-md bg-card dark:bg-slate-700 border-border dark:border-slate-600 text-text-primary dark:text-slate-200 text-sm">
+                <option value="healthy" [selected]="activeScenario() === 'healthy'">Healthy</option>
+                <option value="risk" [selected]="activeScenario() === 'risk'">Conservative</option>
+                <option value="recovery" [selected]="activeScenario() === 'recovery'">Aggressive</option>
+              </select>
+            </div>
+            <div class="mt-4 relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full">
+                <div class="absolute top-0 h-full border-r-2 border-dashed border-slate-500 dark:border-slate-600 z-10" [style.left.%]="100"></div>
+                <div class="h-full rounded-full bg-primary" [style.width.%]="(simulatedForecast() / monthlyGoal()) * 100"></div>
+            </div>
+            <p class="text-center mt-2 text-lg font-bold">Simulated Forecast: <span class="text-primary dark:text-indigo-400">${{simulatedForecast().toLocaleString()}}</span> (Gap: ${{simulatedGap().toLocaleString()}})</p>
+            
+            <div class="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <label class="text-sm font-medium">Improve Win Rate (+{{winRateAdjustment()}}%)</label>
+                <input type="range" min="-10" max="10" [ngModel]="winRateAdjustment()" (ngModelChange)="winRateAdjustment.set($event)" class="w-full">
+              </div>
+              <div>
+                <label class="text-sm font-medium">Close More Deals (+{{closedDealsAdjustment()}})</label>
+                <input type="range" min="-5" max="10" [ngModel]="closedDealsAdjustment()" (ngModelChange)="closedDealsAdjustment.set($event)" class="w-full">
+              </div>
+            </div>
+          }
+          @case ('ai_recommendations') {
+            <h2 class="text-xl font-bold text-text-primary dark:text-slate-100">AI Recommendations</h2>
+            <div class="mt-4 space-y-3">
+              @for(rec of aiRecommendations(); track rec.title) {
+                <div class="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-lg">
+                  <p class="font-semibold text-sm">{{rec.title}}</p>
+                  <p class="text-xs text-text-secondary dark:text-slate-400">{{rec.explanation}}</p>
+                   <button class="mt-2 text-xs font-bold text-primary dark:text-indigo-400 hover:underline">Apply</button>
+                </div>
+              }
+            </div>
+          }
+          @case ('funnel_analysis') {
+            <h2 class="text-xl font-bold text-text-primary dark:text-slate-100">Where deals are being lost</h2>
+            <div class="mt-4 space-y-3">
+              @for(stage of funnelData(); track stage.name) {
+                <div class="p-2 rounded" [class.bg-red-50]="stage.isBottleneck" [class.dark:bg-red-900/20]="stage.isBottleneck">
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="font-semibold">{{stage.name}} ({{stage.dealCount}})</span>
+                    <span class="font-bold" [class]="stage.lossRate > 30 ? 'text-red-500' : 'text-text-secondary dark:text-slate-400'">{{stage.lossRate.toFixed(0)}}% drop</span>
+                  </div>
+                  @if(stage.isBottleneck) {
+                    <button class="text-xs font-bold text-red-600 hover:underline mt-1">Review Stalled Deals</button>
+                  }
+                </div>
+              }
+            </div>
+          }
+          @case ('channel_performance') {
+            <h2 class="text-xl font-bold text-text-primary dark:text-slate-100">Channel Performance</h2>
+             <div class="mt-4 space-y-3">
+              @for(c of channelPerformance(); track c.channel) {
+                <div class="text-sm">
+                  <p class="font-semibold">{{c.channel}}: <span class="text-primary dark:text-indigo-400">${{c.revenue.toLocaleString()}}</span></p>
+                  <p class="text-xs text-text-secondary dark:text-slate-400">Win Rate: {{c.winRate.toFixed(0)}}% | Avg Deal: ${{c.avgDealSize.toLocaleString()}} | Time to close: {{c.avgTimeToClose.toFixed(1)}}d</p>
+                </div>
+              }
+            </div>
+             <div class="mt-4 text-xs p-2 bg-slate-50 dark:bg-slate-700/50 rounded">
+                <p><b>AI Summary:</b> {{aiChannelSummary().best}} {{aiChannelSummary().worst}}</p>
+             </div>
+          }
+          @case ('discipline_metrics') {
+            <h2 class="text-xl font-bold text-text-primary dark:text-slate-100">Sales Execution Discipline</h2>
+            <div class="mt-4 grid grid-cols-3 gap-4 text-center">
+              <div>
+                  <p class="text-sm font-semibold text-text-secondary dark:text-slate-400">Avg. Response</p>
+                  <p class="text-2xl font-bold mt-1" [class]="disciplineMetrics().responseTime < disciplineMetrics().benchmark.responseTime ? 'text-success' : 'text-danger'">{{disciplineMetrics().responseTime}} min</p>
+              </div>
+              <div>
+                  <p class="text-sm font-semibold text-text-secondary dark:text-slate-400">Follow-ups On Time</p>
+                  <p class="text-2xl font-bold mt-1" [class]="disciplineMetrics().followUpRate >= disciplineMetrics().benchmark.followUpRate ? 'text-success' : 'text-danger'">{{disciplineMetrics().followUpRate}}%</p>
+              </div>
+              <div>
+                  <p class="text-sm font-semibold text-text-secondary dark:text-slate-400">Overdue Actions</p>
+                  <p class="text-2xl font-bold mt-1" [class]="disciplineMetrics().overdue < 3 ? 'text-success' : 'text-danger'">{{disciplineMetrics().overdue}}</p>
+              </div>
+            </div>
+             <div class="mt-4 text-center">
+                <button class="text-xs font-bold text-primary dark:text-indigo-400 hover:underline">View Overdue Actions</button>
+             </div>
+          }
+        }
+      </div>
+    }
+  </div>
+
+   <!-- Add Widget Modal -->
+  @if(showAddWidgetModal()) {
+    <div class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" (click)="showAddWidgetModal.set(false)">
+      <div class="bg-slate-800 border border-slate-700 rounded-lg p-6 w-full max-w-sm" (click)="$event.stopPropagation()">
+        <h3 class="text-lg font-bold">Add Widget to Dashboard</h3>
+        <div class="mt-4 space-y-2">
+          @for(widget of availableWidgets(); track widget.id) {
+            <button (click)="addWidget(widget); showAddWidgetModal.set(false);" class="w-full text-left p-3 bg-slate-700 hover:bg-slate-600 rounded-md font-semibold">
+              {{widget.name}}
+            </button>
+          }
+          @if(availableWidgets().length === 0) {
+            <p class="text-sm text-slate-400">All widgets are already on your dashboard.</p>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

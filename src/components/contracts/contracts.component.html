@@ -1,0 +1,240 @@
+
+<div class="space-y-8">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row justify-between sm:items-start">
+    <div>
+      <h1 class="text-3xl font-bold text-text-primary dark:text-slate-100">Revenue Lock</h1>
+      <p class="mt-1 text-sm text-text-secondary dark:text-slate-400">Secure revenue, manage risk, and accelerate contract signing.</p>
+    </div>
+    <button (click)="isGenerateModalOpen.set(true)" class="mt-4 sm:mt-0 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+      Generate Contract
+    </button>
+  </div>
+
+  <!-- Executive Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="bg-card dark:bg-slate-800 p-5 rounded-lg shadow-sm border border-border dark:border-slate-700">
+        <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Awaiting Signature</h3>
+        <p class="mt-1 text-3xl font-bold text-amber-600 dark:text-amber-400">${{ summary().awaitingSignatureValue.toLocaleString() }}</p>
+        <p class="text-xs text-text-secondary dark:text-slate-500 mt-1">{{ summary().awaitingSignatureCount }} contracts pending</p>
+      </div>
+      <div class="bg-card dark:bg-slate-800 p-5 rounded-lg shadow-sm border border-border dark:border-slate-700">
+        <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Committed Revenue</h3>
+        <p class="mt-1 text-3xl font-bold text-green-600 dark:text-green-400">${{ summary().committedRevenue.toLocaleString() }}</p>
+        <p class="text-xs text-text-secondary dark:text-slate-500 mt-1">From signed & active contracts</p>
+      </div>
+      <div class="bg-card dark:bg-slate-800 p-5 rounded-lg shadow-sm border border-border dark:border-slate-700">
+        <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Revenue At Risk</h3>
+        <p class="mt-1 text-3xl font-bold text-red-600 dark:text-red-400">${{ summary().revenueAtRisk.toLocaleString() }}</p>
+        <p class="text-xs text-text-secondary dark:text-slate-500 mt-1">From delayed or stalled contracts</p>
+      </div>
+      <div class="bg-card dark:bg-slate-800 p-5 rounded-lg shadow-sm border border-border dark:border-slate-700">
+        <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Avg. Time to Sign</h3>
+        <p class="mt-1 text-3xl font-bold text-sky-600 dark:text-sky-400">{{ summary().avgTimeToSign.toFixed(1) }} <span class="text-xl">days</span></p>
+        <p class="text-xs text-text-secondary dark:text-slate-500 mt-1">From "Sent" to "Signed"</p>
+      </div>
+  </div>
+  
+  <!-- Filters & Table -->
+  <div class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700">
+    <div class="p-4 border-b border-border dark:border-slate-700 flex flex-wrap items-center gap-2">
+      <button (click)="activeFilter.set('all')" [class]="activeFilter() === 'all' ? 'bg-primary text-white' : 'bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200'" class="px-3 py-1 text-sm font-semibold rounded-full">All</button>
+      @for(status of ['Generated', 'Sent', 'Viewed', 'Signed', 'Active', 'At Risk']; track status) {
+        <button (click)="activeFilter.set(status)" [class]="activeFilter() === status ? 'bg-primary text-white' : 'bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200'" class="px-3 py-1 text-sm font-semibold rounded-full">{{ status }}</button>
+      }
+    </div>
+    
+    @if(filteredContracts().length > 0) {
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-border dark:divide-slate-700">
+          <thead class="bg-slate-50 dark:bg-slate-900/50 text-xs uppercase text-text-secondary dark:text-slate-400">
+              <tr>
+                  <th scope="col" class="px-6 py-3 text-left font-medium tracking-wider">Client</th>
+                  <th scope="col" class="px-6 py-3 text-left font-medium tracking-wider">Value / Type</th>
+                  <th scope="col" class="px-6 py-3 text-left font-medium tracking-wider">Revenue State</th>
+                  <th scope="col" class="px-6 py-3 text-left font-medium tracking-wider">Status</th>
+                  <th scope="col" class="px-6 py-3 text-left font-medium tracking-wider">Risk / Insight</th>
+                  <th scope="col" class="px-6 py-3 text-left font-medium tracking-wider">Dates</th>
+                  <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+              </tr>
+          </thead>
+          <tbody class="divide-y divide-border dark:divide-slate-700">
+              @for(contract of filteredContracts(); track contract.id) {
+                  <tr (click)="openSlideOver(contract)" class="group relative hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary dark:text-slate-200">{{ contract.leadName }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary dark:text-slate-400">
+                          <span class="font-semibold text-text-primary dark:text-slate-300">${{ contract.value.toLocaleString() }}</span>
+                          <span class="capitalize"> / {{ contract.contractType }}</span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
+                          <span class="flex items-center" [class]="{
+                            'text-amber-600 dark:text-amber-400': contract.revenueState === 'Expected',
+                            'text-green-600 dark:text-green-500': contract.revenueState !== 'Expected'
+                          }">
+                            <span class="h-2 w-2 rounded-full mr-2" [class]="{
+                            'bg-amber-500': contract.revenueState === 'Expected',
+                            'bg-green-500': contract.revenueState !== 'Expected'
+                          }"></span>
+                            {{ contract.revenueState }}
+                          </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" [class]="{
+                            'bg-gray-100 text-gray-800 dark:bg-slate-700 dark:text-slate-300': ['Draft', 'Generated'].includes(contract.status),
+                            'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300': contract.status === 'Sent',
+                            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300': contract.status === 'Viewed',
+                            'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300': ['Signed', 'Active', 'Completed'].includes(contract.status),
+                            'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300': ['At Risk', 'Cancelled'].includes(contract.status)
+                          }">{{ contract.status }}</span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm">
+                          <span class="flex items-center font-semibold" [class]="{
+                              'text-red-500': contract.riskLevel === 'high',
+                              'text-amber-500': contract.riskLevel === 'medium',
+                              'text-green-500': contract.riskLevel === 'none',
+                              'text-text-secondary dark:text-slate-400': contract.riskLevel === 'low'
+                          }">
+                              @if(contract.riskLevel === 'high' || contract.riskLevel === 'medium') { <span class="text-base mr-1">⚠️</span> }
+                              {{ contract.aiSignal }}
+                          </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary dark:text-slate-400">
+                          <div>Created: {{ formatDate(contract.createdAt) }}</div>
+                          <div>Signed: {{ formatDate(contract.signedAt) }}</div>
+                      </td>
+                      <td class="px-6 py-4 text-right">
+                        <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="p-2 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700">
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" /></svg>
+                            </button>
+                        </div>
+                      </td>
+                  </tr>
+              }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="p-8 text-center text-text-secondary dark:text-slate-400">
+          <h3 class="text-lg font-medium text-text-primary dark:text-slate-200">No contracts found for this filter.</h3>
+          <p class="text-sm mt-1">Try clearing the filter or generating a new contract from an accepted proposal.</p>
+          <button (click)="activeFilter.set('all')" class="mt-4 px-3 py-1 text-sm font-semibold bg-primary text-white rounded-full">Clear Filter</button>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Contract Details Slide-over -->
+@if(isSlideOverOpen() && selectedContract(); as contract) {
+  <div class="fixed inset-0 z-50 overflow-hidden" (click)="isSlideOverOpen.set(false)">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
+    <div class="fixed inset-y-0 right-0 flex max-w-full pl-10" (click)="$event.stopPropagation()">
+      <div class="w-screen max-w-md">
+        <div class="flex h-full flex-col overflow-y-scroll bg-card dark:bg-slate-800 shadow-xl border-l border-border dark:border-slate-700">
+          <!-- Header -->
+          <div class="p-6">
+            <div class="flex items-start justify-between">
+              <div>
+                <h2 class="text-2xl font-bold text-text-primary dark:text-slate-100">{{ contract.leadName }}</h2>
+                <p class="text-sm text-text-secondary dark:text-slate-400">{{contract.legalName}}</p>
+              </div>
+              <button (click)="isSlideOverOpen.set(false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">&times;</button>
+            </div>
+          </div>
+          <!-- Main Content -->
+          <div class="flex-1 space-y-6 p-6 border-y border-border dark:border-slate-700">
+            <!-- AI Analysis -->
+            <div class="p-4 rounded-lg" [class]="{
+              'bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500': contract.riskLevel === 'high',
+              'bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500': contract.riskLevel === 'medium',
+              'bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500': contract.riskLevel === 'none'
+            }">
+              <p class="font-bold text-sm" [class]="{
+                'text-red-800 dark:text-red-300': contract.riskLevel === 'high',
+                'text-amber-800 dark:text-amber-300': contract.riskLevel === 'medium',
+                'text-green-800 dark:text-green-300': contract.riskLevel === 'none'
+              }">AI Analysis</p>
+              <p class="text-sm mt-1" [class]="{
+                'text-red-700 dark:text-red-400': contract.riskLevel === 'high',
+                'text-amber-700 dark:text-amber-400': contract.riskLevel === 'medium',
+                'text-green-700 dark:text-green-400': contract.riskLevel === 'none'
+              }">{{ contract.aiSignal }}</p>
+            </div>
+            
+            <!-- Key Details -->
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div><p class="text-text-secondary dark:text-slate-400">Value</p><p class="font-bold text-lg">${{contract.value.toLocaleString()}}</p></div>
+                <div><p class="text-text-secondary dark:text-slate-400">Type</p><p class="font-bold text-lg capitalize">{{contract.contractType}}</p></div>
+                <div><p class="text-text-secondary dark:text-slate-400">Revenue State</p><p class="font-bold text-lg">{{contract.revenueState}}</p></div>
+                <div><p class="text-text-secondary dark:text-slate-400">Status</p><p class="font-bold text-lg">{{contract.status}}</p></div>
+            </div>
+            
+            <!-- Timeline -->
+            <div>
+              <h3 class="font-semibold text-text-primary dark:text-slate-200 mb-2">Lifecycle</h3>
+              <ul class="space-y-3">
+                @for(event of contract.timeline; track $index) {
+                  <li class="flex items-center space-x-3">
+                    <div class="h-6 w-6 flex-shrink-0 rounded-full flex items-center justify-center bg-primary-light dark:bg-slate-700">
+                      <svg class="h-4 w-4 text-primary dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm3.847-8.41a.75.75 0 0 0-1.194-.858l-2.053 2.871-1.303-1.303a.75.75 0 1 0-1.06 1.06l1.833 1.833a.75.75 0 0 0 1.06 0L11.847 7.59a.75.75 0 0 0-.142-1.24Z" clip-rule="evenodd" /></svg>
+                    </div>
+                    <div>
+                      <p class="text-sm font-semibold text-text-primary dark:text-slate-200">{{event.status}}</p>
+                      <p class="text-xs text-text-secondary dark:text-slate-400">{{formatDate(event.timestamp)}}</p>
+                    </div>
+                  </li>
+                }
+              </ul>
+            </div>
+          </div>
+          <!-- Actions -->
+          <div class="p-6 flex flex-wrap gap-2 border-t border-border dark:border-slate-700">
+              <button class="px-3 py-1.5 text-sm font-semibold rounded-md bg-card dark:bg-slate-700 border border-border dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600">View Document</button>
+              <button (click)="handleAction('resend', contract.id, $event)" [disabled]="['Signed', 'Active', 'Completed', 'Cancelled'].includes(contract.status)" class="px-3 py-1.5 text-sm font-semibold rounded-md bg-card dark:bg-slate-700 border border-border dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 disabled:opacity-50">Resend</button>
+              @if(contract.status === 'Signed') {
+                <button (click)="handleAction('mark_active', contract.id, $event)" class="px-3 py-1.5 text-sm font-semibold rounded-md bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 hover:bg-green-200">Mark as Active</button>
+              }
+              <button (click)="handleAction('cancel', contract.id, $event)" [disabled]="['Signed', 'Active', 'Completed', 'Cancelled'].includes(contract.status)" class="px-3 py-1.5 text-sm font-semibold rounded-md text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 disabled:opacity-50">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Generate Contract Modal -->
+@if(isGenerateModalOpen()) {
+  <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" (click)="isGenerateModalOpen.set(false)">
+      <div class="bg-card dark:bg-slate-800 rounded-lg p-6 w-full max-w-lg" (click)="$event.stopPropagation()">
+          <h2 class="text-xl font-bold text-text-primary dark:text-slate-100">Generate New Contract</h2>
+          <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">Create a new contract from an accepted proposal to lock in revenue.</p>
+          <div class="mt-6 space-y-4">
+              <div>
+                  <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">Accepted Proposal</label>
+                  <select (change)="onProposalSelect($any($event.target).value)" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200">
+                      <option value="">Select a proposal...</option>
+                      @for(p of acceptedProposals(); track p.id) {
+                          <option [value]="p.id">{{p.leadName}} - ${{p.value.toLocaleString()}}</option>
+                      }
+                  </select>
+              </div>
+               <div>
+                  <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">Contract Type</label>
+                  <select [(ngModel)]="newContract().contractType" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200">
+                      <option value="one-time">One-time Project</option>
+                      <option value="recurring">Recurring Service</option>
+                      <option value="milestone">Milestone-based</option>
+                  </select>
+              </div>
+              <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                  <p>Client: <b class="dark:text-white">{{newContract().leadName || '...'}}</b></p>
+                  <p>Value: <b class="dark:text-white">${{newContract().value.toLocaleString() || '...'}}</b></p>
+              </div>
+          </div>
+          <div class="mt-8 flex justify-end space-x-3">
+              <button (click)="isGenerateModalOpen.set(false)" class="bg-card dark:bg-slate-700 py-2 px-4 border border-border dark:border-slate-600 rounded-md text-sm font-medium">Cancel</button>
+              <button (click)="handleGenerateContract()" [disabled]="!newContract().proposalId" class="py-2 px-4 rounded-md text-sm font-medium text-primary-foreground bg-primary hover:bg-primary-hover disabled:opacity-50">Generate & Save as Draft</button>
+          </div>
+      </div>
+  </div>
+}

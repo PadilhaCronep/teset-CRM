@@ -1,0 +1,248 @@
+
+<div class="space-y-10">
+  
+  <!-- BLOCK F: Activation Checklist -->
+  <app-activation-checklist></app-activation-checklist>
+
+  <!-- Section: Hot Leads -->
+  <section>
+    <div class="flex items-center mb-4">
+      <h2 class="text-xl font-semibold text-text-primary dark:text-slate-100">{{ t.hotLeads() }}</h2>
+      <span class="ml-3 inline-flex items-center justify-center bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 font-semibold rounded-full h-6 w-6 text-sm">{{ hotLeads().length }}</span>
+    </div>
+    @if (hotLeads().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        @for (lead of hotLeads(); track lead.id) {
+          <div class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border-2 border-orange-400 dark:border-orange-600 hover:shadow-md transition-shadow duration-200 group">
+            <div class="p-4">
+              <p class="font-semibold text-text-primary dark:text-white truncate">{{ lead.name }}</p>
+              <p class="text-sm text-text-secondary dark:text-slate-400">{{ "Qualified " + getTimeSince(lead.firstContactAt!) + " ago via " + lead.origin }}</p>
+              <div class="mt-2 text-xs font-semibold">
+                <span class="inline-block bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded mr-1">{{ lead.qualification?.budget }} {{ t.budget() }}</span>
+                <span class="inline-block bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded">{{ lead.qualification?.urgency }}</span>
+              </div>
+            </div>
+            <div class="p-4 bg-orange-50 dark:bg-orange-900/20 border-t border-orange-300 dark:border-orange-800 flex items-center justify-between">
+              <span class="text-sm font-medium text-orange-800 dark:text-orange-300">{{ t.nextDeal() }}</span>
+              <button class="px-3 py-1 bg-orange-500 text-white text-sm font-semibold rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                {{ t.convert() }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="p-6 text-center text-text-secondary dark:text-slate-400 bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700">
+        <p class="font-medium">{{ t.noHotLeads() }}</p>
+      </div>
+    }
+  </section>
+
+  <!-- Section A: Leads with NO first contact -->
+  <section>
+    <div class="flex items-center mb-4">
+      <h2 class="text-xl font-semibold text-text-primary dark:text-slate-100">{{ t.newLeads() }}</h2>
+      <span class="ml-3 inline-flex items-center justify-center bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 font-semibold rounded-full h-6 w-6 text-sm">{{ leadsWithNoContact().length }}</span>
+    </div>
+    @if (leadsWithNoContact().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        @for (lead of leadsWithNoContact(); track lead.id) {
+          <div class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700 hover:shadow-md transition-shadow duration-200 group">
+            <div class="p-4">
+              <p class="font-semibold text-text-primary dark:text-white truncate">{{ lead.name }}</p>
+              <p class="text-sm text-text-secondary dark:text-slate-400">{{ t.fromOrigin(lead.origin) }} &middot; 
+                <span [class]="getTimeSince(lead.createdAt).includes('d') || getTimeSince(lead.createdAt).includes('w') ? 'text-amber-600 dark:text-amber-500 font-medium' : ''">{{ getTimeSince(lead.createdAt) }}</span>
+              </p>
+            </div>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-border dark:border-slate-700 flex items-center justify-between">
+              <span class="text-sm font-medium text-primary dark:text-indigo-400">{{ t.actionContact() }}</span>
+              <button class="px-3 py-1 bg-primary text-primary-foreground text-sm font-semibold rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                {{ t.contact() }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="p-6 text-center text-text-secondary dark:text-slate-400 bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700">
+        <p class="font-medium">{{ t.inboxZero() }}</p>
+      </div>
+    }
+  </section>
+
+  <!-- Section B: Overdue Actions (Unified) -->
+  <section>
+    <div class="flex items-center mb-4">
+      <h2 class="text-xl font-semibold text-text-primary dark:text-slate-100">{{ t.overdue() }}</h2>
+      <span class="ml-3 inline-flex items-center justify-center bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 font-semibold rounded-full h-6 w-6 text-sm">{{ totalOverdue() }}</span>
+    </div>
+    @if (totalOverdue() > 0) {
+      <div class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border-2 border-danger dark:border-red-700 overflow-hidden">
+        <ul class="divide-y divide-border dark:divide-slate-700">
+          <!-- Overdue Leads -->
+          @for (lead of overdueFollowUps(); track lead.id) {
+            <li class="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors duration-150 group">
+              <div class="flex items-center space-x-4">
+                 <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 text-danger dark:text-red-400" title="Lead Action">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m-7.5-2.928A3 3 0 0 1 7.5 12.5m3 3.75a3 3 0 0 1-3-3m.002 3.75a3 3 0 0 0 3-3m-9.75 3.028a9.094 9.094 0 0 1-3.741-.479 3 3 0 0 1 4.682-2.72m-7.5-2.928a3 3 0 0 0 3 3m-3-3a3 3 0 0 0-3-3m.002 3.75a3 3 0 0 1-3-3m9.75 3.028a9.094 9.094 0 0 0 3.741.479 3 3 0 0 0 4.682-2.72m-7.5 2.928a3 3 0 0 1 7.5-.002" /></svg>
+                 </div>
+                 <div>
+                    <p class="text-md font-semibold text-text-primary dark:text-white">{{ lead.name }}</p>
+                    <p class="text-sm text-text-secondary dark:text-slate-400">
+                      <span class="font-bold text-danger dark:text-red-400">{{ t.daysOverdue(getDaysOverdue(lead.dueDate)) }}</span> &middot; {{ lead.nextActionText }}
+                    </p>
+                 </div>
+              </div>
+              <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                 <button class="px-3 py-1 bg-card dark:bg-slate-600 border border-border dark:border-slate-500 text-text-secondary dark:text-slate-200 text-sm font-semibold rounded-md hover:bg-slate-100 dark:hover:bg-slate-500">{{ t.reschedule() }}</button>
+                 <button class="px-4 py-2 bg-danger text-white text-sm font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-danger">{{ t.resolve() }}</button>
+              </div>
+            </li>
+          }
+          <!-- Overdue Proposals -->
+          @for (proposal of overdueProposals(); track proposal.id) {
+            <li class="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors duration-150 group">
+              <div class="flex items-center space-x-4">
+                 <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 text-danger dark:text-red-400" title="Proposal Action">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+                 </div>
+                 <div>
+                    <p class="text-md font-semibold text-text-primary dark:text-white">{{ proposal.leadName }}</p>
+                    <p class="text-sm text-text-secondary dark:text-slate-400">
+                      <span class="font-bold text-danger dark:text-red-400">{{ t.daysOverdue(getDaysOverdue(proposal.dueDate)) }}</span> &middot; {{ proposal.nextActionText }}
+                    </p>
+                 </div>
+              </div>
+              <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                 <button class="px-4 py-2 bg-danger text-white text-sm font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-danger">{{ t.resolve() }}</button>
+              </div>
+            </li>
+          }
+          <!-- Overdue Contracts -->
+          @for (contract of overdueContracts(); track contract.id) {
+            <li class="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors duration-150 group">
+              <div class="flex items-center space-x-4">
+                 <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 text-danger dark:text-red-400" title="Contract Action">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
+                 </div>
+                 <div>
+                    <p class="text-md font-semibold text-text-primary dark:text-white">{{ contract.leadName }}</p>
+                    <p class="text-sm text-text-secondary dark:text-slate-400">
+                      <span class="font-bold text-danger dark:text-red-400">{{ t.daysOverdue(getDaysOverdue(contract.dueDate)) }}</span> &middot; {{ contract.nextActionText }}
+                    </p>
+                 </div>
+              </div>
+              <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                 <button class="px-4 py-2 bg-danger text-white text-sm font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-danger">{{ t.resolve() }}</button>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    } @else {
+      <div class="p-6 text-center text-text-secondary dark:text-slate-400 bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700">
+        <p class="font-medium">{{ t.noOverdue() }}</p>
+      </div>
+    }
+  </section>
+
+  <!-- Section C & D side-by-side -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <!-- Proposals viewed with no response -->
+    <section>
+       <div class="flex items-center mb-4">
+        <h2 class="text-xl font-semibold text-text-primary dark:text-slate-100">{{ t.proposalsViewed() }}</h2>
+         <span class="ml-3 inline-flex items-center justify-center bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 font-semibold rounded-full h-6 w-6 text-sm">{{ proposalsNeedingFollowUp().length }}</span>
+      </div>
+       <div class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700 overflow-hidden">
+        @if (proposalsNeedingFollowUp().length > 0) {
+          <ul class="divide-y divide-border dark:divide-slate-700">
+            @for (proposal of proposalsNeedingFollowUp(); track proposal.id) {
+              <li class="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 group">
+                <div>
+                  <p class="text-md font-semibold text-text-primary dark:text-white">{{ proposal.leadName }}</p>
+                  <p class="text-sm text-text-secondary dark:text-slate-400"><span class="font-medium text-amber-700 dark:text-amber-500">{{ t.viewedAgo(getTimeSince(getLastViewedTime(proposal))) }}</span> &middot; ${{proposal.value.toLocaleString()}}</p>
+                </div>
+                <button class="px-3 py-1 bg-amber-500 text-white text-sm font-semibold rounded-md hover:bg-amber-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {{ t.followUp() }}
+                </button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="p-6 text-center text-text-secondary dark:text-slate-400">
+            <p class="font-medium">{{ t.noHotProposals() }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Deals at risk (stalled) -->
+    <section>
+       <div class="flex items-center mb-4">
+        <h2 class="text-xl font-semibold text-text-primary dark:text-slate-100">{{ t.dealsAtRisk() }}</h2>
+        <span class="ml-3 inline-flex items-center justify-center bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-semibold rounded-full h-6 w-6 text-sm">{{ stalledDeals().length }}</span>
+      </div>
+      <div class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700 overflow-hidden">
+        @if (stalledDeals().length > 0) {
+          <ul class="divide-y divide-border dark:divide-slate-700">
+            @for (deal of stalledDeals(); track deal.id) {
+              <li class="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 group">
+                <div>
+                  <p class="text-md font-semibold text-text-primary dark:text-white">{{ deal.leadName }}</p>
+                  <p class="text-sm text-text-secondary dark:text-slate-400"><span class="font-medium text-purple-700 dark:text-purple-400">{{ t.stalledIn(deal.stage) }}</span> &middot; {{ t.lastActionAgo(getTimeSince(deal.lastActionAt)) }}</p>
+                </div>
+                 <button class="px-3 py-1 bg-purple-600 text-white text-sm font-semibold rounded-md hover:bg-purple-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {{ t.nudge() }}
+                </button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="p-6 text-center text-text-secondary dark:text-slate-400">
+            <p class="font-medium">{{ t.noStalledDeals() }}</p>
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+  
+  <!-- Block I & H -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <!-- Reactivation Opportunities -->
+      <section>
+        <div class="flex items-center mb-4">
+            <h2 class="text-xl font-semibold text-text-primary dark:text-slate-100">{{ t.reactivationOpps() }}</h2>
+            <span class="ml-3 inline-flex items-center justify-center bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 font-semibold rounded-full h-6 w-6 text-sm">{{ reactivationOpportunities().length }}</span>
+        </div>
+        <div class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700 overflow-hidden">
+            @if(reactivationOpportunities().length > 0) {
+              <!-- content -->
+            } @else {
+                <div class="p-6 text-center text-text-secondary dark:text-slate-400">
+                    <p class="font-medium">{{ t.noReactivations() }}</p>
+                </div>
+            }
+        </div>
+      </section>
+
+      <!-- Learning Hub -->
+      <section>
+        <div class="flex items-center mb-4">
+            <h2 class="text-xl font-semibold text-text-primary dark:text-slate-100">{{ t.learningHub() }}</h2>
+        </div>
+        <div class="space-y-3">
+            @for(lesson of microLessons(); track lesson.id) {
+                <div class="bg-card dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-border dark:border-slate-700 flex items-center justify-between hover:border-primary dark:hover:border-primary transition-colors">
+                    <div>
+                        <p class="font-semibold text-text-primary dark:text-white">{{ lesson.title }}</p>
+                        <p class="text-xs text-text-secondary dark:text-slate-400">{{ lesson.category }} &middot; {{ lesson.duration }} {{ t.min() }}</p>
+                    </div>
+                    <button class="text-primary dark:text-indigo-400 hover:text-primary-hover font-semibold text-sm">{{ t.start() }}</button>
+                </div>
+            }
+        </div>
+      </section>
+  </div>
+
+</div>

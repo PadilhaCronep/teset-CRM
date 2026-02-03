@@ -1,0 +1,5 @@
+
+/* Ensure the hover menu appears above other table rows */
+tr.group:hover .absolute {
+    display: block;
+}

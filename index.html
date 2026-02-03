@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-t" />
+  <title>Revenue OS</title>
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            'primary': {
+              'DEFAULT': '#4f46e5', // indigo-600
+              'hover': '#4338ca', // indigo-700
+              'light': '#e0e7ff', // indigo-100
+              'foreground': '#ffffff'
+            },
+            'success': '#16a34a', // green-600
+            'dark-success': '#22c55e', // green-500
+            'warning': '#f97316', // orange-500
+            'danger': '#dc2626', // red-600
+            'dark-danger': '#ef4444', // red-500
+            'info': '#0ea5e9', // sky-500,
+            'text': {
+              'primary': '#111827', // gray-900
+              'secondary': '#6b7280' // gray-500
+            },
+            'card': '#ffffff',
+            'border': '#e5e7eb' // gray-200
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar for Kanban */
+    .kanban-container::-webkit-scrollbar {
+      height: 8px;
+    }
+    .kanban-container::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+    .dark .kanban-container::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    .kanban-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+    .dark .kanban-container::-webkit-scrollbar-thumb {
+      background: #475569;
+    }
+    .kanban-container::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .dark .kanban-container::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://esm.sh/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://esm.sh/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://esm.sh/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://esm.sh/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://esm.sh/rxjs@^7.8.2/testing?conditions=es2015",
+    "rxjs/fetch": "https://esm.sh/rxjs@^7.8.2/fetch?conditions=es2015",
+    "@angular/compiler": "https://esm.sh/@angular/compiler@^21.1.2?external=rxjs",
+    "@angular/platform-browser": "https://esm.sh/@angular/platform-browser@^21.1.2?external=rxjs",
+    "@angular/common/http": "https://esm.sh/@angular/common@^21.1.2/http?external=rxjs",
+    "@angular/core": "https://esm.sh/@angular/core@^21.1.2?external=rxjs",
+    "@angular/common": "https://esm.sh/@angular/common@^21.1.2?external=rxjs",
+    "@angular/forms": "https://esm.sh/@angular/forms@^21.1.2?external=rxjs",
+    "@angular/router": "https://esm.sh/@angular/router@^21.1.2?external=rxjs",
+    "@angular/core/rxjs-interop": "https://esm.sh/@angular/core@^21.1.2/rxjs-interop?external=rxjs"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 font-sans antialiased">
+  <app-root></app-root>
+</body>
+</html>

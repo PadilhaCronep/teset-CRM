@@ -1,0 +1,50 @@
+
+@if(showChecklist()) {
+<section class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700 p-6 mb-10">
+    <div class="flex flex-col sm:flex-row justify-between sm:items-center">
+        <div>
+            @if(progress() < 100) {
+                <h2 class="text-xl font-semibold text-text-primary dark:text-slate-100">{{ t_title() }}</h2>
+                <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">{{ t_subtitle() }}</p>
+            } @else {
+                 <h2 class="text-xl font-semibold text-green-600 dark:text-green-400">{{ t_complete_title() }}</h2>
+                <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">{{ t_complete_subtitle() }}</p>
+            }
+        </div>
+        <div class="mt-3 sm:mt-0 text-sm font-semibold text-primary dark:text-indigo-400">
+            {{ completedCount() }} / {{ tasks().length }} {{ t_tasks_completed() }}
+        </div>
+    </div>
+    <!-- Progress Bar -->
+    <div class="mt-4">
+        <div class="bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+            <div class="bg-primary h-2 rounded-full transition-all duration-500" [style.width.%]="progress()"></div>
+        </div>
+    </div>
+    <!-- Checklist -->
+    <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        @for(task of translatedTasks(); track task.id) {
+            <div class="flex items-center p-3 rounded-md transition-colors" [class]="task.completed ? 'bg-green-50 dark:bg-green-900/20' : 'bg-slate-50 dark:bg-slate-900/30'">
+                <div class="flex-shrink-0 h-6 w-6 rounded-full flex items-center justify-center" [class]="task.completed ? 'bg-green-500' : 'border-2 border-slate-300 dark:border-slate-500'">
+                    @if(task.completed) {
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-white"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.493-6.74a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" /></svg>
+                    }
+                </div>
+                <p class="ml-3 text-sm font-medium" [class]="task.completed ? 'text-slate-500 dark:text-slate-400 line-through' : 'text-slate-700 dark:text-slate-300'">
+                    {{ task.text }}
+                </p>
+                 @if(!task.completed) {
+                     <button (click)="simulateComplete(task.id)" class="ml-auto text-xs font-bold text-primary dark:text-indigo-400 opacity-50 hover:opacity-100" [title]="t_simulate()">
+                         {{ t_simulate() }}
+                     </button>
+                 }
+            </div>
+        }
+    </div>
+     @if(progress() === 100) {
+        <div class="mt-5 text-right">
+             <button (click)="dismiss()" class="text-sm font-semibold text-text-secondary hover:text-text-primary dark:hover:text-slate-300">{{ t_dismiss() }}</button>
+        </div>
+    }
+</section>
+}

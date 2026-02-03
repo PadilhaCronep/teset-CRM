@@ -1,0 +1,77 @@
+
+<div class="bg-slate-100 dark:bg-slate-900 min-h-screen flex flex-col items-center justify-center p-4">
+  <div class="w-full max-w-2xl">
+    <div class="text-center">
+        <svg class="mx-auto h-12 w-auto text-primary" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z"></path></svg>
+        <h1 class="mt-4 text-3xl font-bold text-text-primary dark:text-slate-100">{{ t_welcome_title() }}</h1>
+        <p class="mt-2 text-lg text-text-secondary dark:text-slate-400">{{ t_welcome_subtitle() }}</p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mt-8">
+        <div class="bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
+            <div class="bg-primary h-2.5 rounded-full" [style.width.%]="(step() / totalSteps) * 100"></div>
+        </div>
+        <p class="text-sm text-center mt-2 text-text-secondary dark:text-slate-400">{{ t_step() }} {{ step() }} {{ t_of() }} {{ totalSteps }}</p>
+    </div>
+
+    <div class="mt-6 bg-card dark:bg-slate-800 p-8 rounded-lg shadow-lg border border-border dark:border-slate-700">
+        <!-- Step 1: Company Info -->
+        @if(step() === 1) {
+            <div>
+                <h2 class="text-xl font-semibold text-text-primary dark:text-slate-200">{{ t_step1_title() }}</h2>
+                <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">{{ t_step1_subtitle() }}</p>
+                <div class="mt-4">
+                    <label for="company-name" class="sr-only">Company Name</label>
+                    <input type="text" id="company-name" [(ngModel)]="companyName" class="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3">
+                </div>
+                <div class="mt-6 text-right">
+                    <button (click)="nextStep()" class="bg-primary hover:bg-primary-hover text-white font-semibold px-6 py-2 rounded-md">{{ t_continue() }}</button>
+                </div>
+            </div>
+        }
+        <!-- Step 2: Create Salesperson -->
+        @if(step() === 2) {
+            <div>
+                <h2 class="text-xl font-semibold text-text-primary dark:text-slate-200">{{ t_step2_title() }}</h2>
+                <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">{{ t_step2_subtitle() }}</p>
+                <div class="mt-4">
+                    <label for="salesperson-name" class="sr-only">Salesperson Name</label>
+                    <input type="text" id="salesperson-name" [(ngModel)]="salespersonName" class="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3">
+                </div>
+                <div class="mt-6 text-right">
+                    <button (click)="nextStep()" class="bg-primary hover:bg-primary-hover text-white font-semibold px-6 py-2 rounded-md">{{ t_continue() }}</button>
+                </div>
+            </div>
+        }
+        <!-- Step 3: Create Lead -->
+        @if(step() === 3) {
+            <div>
+                <h2 class="text-xl font-semibold text-text-primary dark:text-slate-200">{{ t_step3_title() }}</h2>
+                <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">{{ t_step3_subtitle() }}</p>
+                <div class="mt-4">
+                    <label for="lead-name" class="sr-only">Lead Name</label>
+                    <input type="text" id="lead-name" [(ngModel)]="leadName" class="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3">
+                </div>
+                 <div class="mt-6 text-right">
+                    <button (click)="nextStep()" class="bg-primary hover:bg-primary-hover text-white font-semibold px-6 py-2 rounded-md">{{ t_create_continue() }}</button>
+                </div>
+            </div>
+        }
+        <!-- Step 4: Set Follow-up -->
+        @if(step() === 4) {
+            <div>
+                <h2 class="text-xl font-semibold text-text-primary dark:text-slate-200">{{ t_step4_title() }}</h2>
+                <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">{{ t_step4_subtitle() }}</p>
+                <div class="mt-4 p-4 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg">
+                    <p class="font-semibold text-text-secondary dark:text-slate-300">{{ t_action() }}</p>
+                    <p class="text-sm text-text-secondary dark:text-slate-400">{{ t_due() }}</p>
+                </div>
+                <div class="mt-6 text-right">
+                    <button (click)="finishOnboarding()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-md">{{ t_finish() }}</button>
+                </div>
+            </div>
+        }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+
+<h1 class="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-6">Settings</h1>
+
+<div class="space-y-8">
+    <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-border dark:border-slate-700 space-y-6">
+    <div>
+        <h2 class="text-xl font-semibold text-slate-700 dark:text-slate-200">Company Settings</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Manage your company details and sales goals.</p>
+    </div>
+    
+    <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
+        <label for="company-name" class="block text-sm font-medium text-gray-700 dark:text-slate-300">Company Name</label>
+        <input type="text" id="company-name" value="My Awesome SMB" class="mt-1 block w-full md:w-1/2 rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+    </div>
+
+    <div>
+        <label for="monthly-goal" class="block text-sm font-medium text-gray-700 dark:text-slate-300">Monthly Sales Goal ($)</label>
+        <input type="number" id="monthly-goal" value="100000" class="mt-1 block w-full md:w-1/2 rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+    </div>
+
+    <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
+        <h2 class="text-xl font-semibold text-slate-700 dark:text-slate-200">Pipeline Stages</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Customize the stages of your sales pipeline. (Functionality coming soon)</p>
+        <div class="mt-4 space-y-2">
+        <div class="p-3 bg-slate-100 dark:bg-slate-700 rounded text-slate-600 dark:text-slate-300">New Lead</div>
+        <div class="p-3 bg-slate-100 dark:bg-slate-700 rounded text-slate-600 dark:text-slate-300">Contacted</div>
+        <div class="p-3 bg-slate-100 dark:bg-slate-700 rounded text-slate-600 dark:text-slate-300">Proposal Sent</div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Block J: Monetization Hook -->
+    <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-border dark:border-slate-700">
+        <div class="flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-semibold text-slate-700 dark:text-slate-200">Integrations</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Connect Revenue OS to your other tools.</p>
+            </div>
+            <button class="text-sm font-semibold text-primary dark:text-indigo-400 hover:underline">Upgrade to Pro to unlock</button>
+        </div>
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <!-- Available Integration -->
+            <div class="p-4 border border-slate-200 dark:border-slate-600 rounded-lg flex items-center justify-between">
+                <div>
+                    <p class="font-semibold text-slate-800 dark:text-slate-100">Google Calendar</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Sync your follow-ups</p>
+                </div>
+                <div class="w-10 h-6 rounded-full p-1 flex items-center bg-green-500">
+                    <div class="h-4 w-4 rounded-full bg-white ml-auto"></div>
+                </div>
+            </div>
+            <!-- Locked Integration -->
+            <div class="p-4 border border-slate-200 dark:border-slate-600 rounded-lg flex items-center justify-between opacity-60">
+                <div>
+                    <p class="font-semibold text-slate-800 dark:text-slate-100">QuickBooks</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Accounting Automation</p>
+                </div>
+                <div class="w-10 h-6 rounded-full p-1 flex items-center bg-slate-300 dark:bg-slate-600">
+                    <div class="h-4 w-4 rounded-full bg-white"></div>
+                </div>
+            </div>
+             <!-- Locked Integration -->
+            <div class="p-4 border border-slate-200 dark:border-slate-600 rounded-lg flex items-center justify-between opacity-60">
+                <div>
+                    <p class="font-semibold text-slate-800 dark:text-slate-100">Mailchimp</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Marketing Automation</p>
+                </div>
+                <div class="w-10 h-6 rounded-full p-1 flex items-center bg-slate-300 dark:bg-slate-600">
+                    <div class="h-4 w-4 rounded-full bg-white"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

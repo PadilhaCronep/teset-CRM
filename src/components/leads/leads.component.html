@@ -1,0 +1,210 @@
+
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between sm:items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-text-primary dark:text-slate-100">{{ t.title() }}</h1>
+            <p class="mt-1 text-sm text-text-secondary dark:text-slate-400">
+                {{ t.summary(summary().count) }} &middot; 
+                <span class="font-semibold text-red-500">{{ t.summary_overdue(summary().overdue) }}</span> &middot; 
+                <span class="font-semibold text-amber-500">{{ t.summary_due_today(summary().dueToday) }}</span>
+            </p>
+        </div>
+        <button (click)="isCreateModalOpen.set(true)" class="mt-4 sm:mt-0 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+            {{ t.create() }}
+        </button>
+    </div>
+
+    <!-- Quick Filters -->
+    <div class="flex flex-wrap items-center gap-2">
+        <button (click)="activeFilter.set('all')" [class]="activeFilter() === 'all' ? 'bg-primary text-white' : 'bg-card dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'" class="px-3 py-1 text-sm font-semibold border border-slate-300 dark:border-slate-600 rounded-full">{{ t.filter_all() }} ({{filterCounts().all}})</button>
+        <button (click)="activeFilter.set('overdue')" [class]="activeFilter() === 'overdue' ? 'bg-primary text-white' : 'bg-card dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'" class="px-3 py-1 text-sm font-semibold border border-slate-300 dark:border-slate-600 rounded-full">{{ t.filter_overdue() }} ({{filterCounts().overdue}})</button>
+        <button (click)="activeFilter.set('due-today')" [class]="activeFilter() === 'due-today' ? 'bg-primary text-white' : 'bg-card dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'" class="px-3 py-1 text-sm font-semibold border border-slate-300 dark:border-slate-600 rounded-full">{{ t.filter_due_today() }} ({{filterCounts()['due-today']}})</button>
+        <button (click)="activeFilter.set('new')" [class]="activeFilter() === 'new' ? 'bg-primary text-white' : 'bg-card dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'" class="px-3 py-1 text-sm font-semibold border border-slate-300 dark:border-slate-600 rounded-full">{{ t.filter_new() }} ({{filterCounts().new}})</button>
+        <button (click)="activeFilter.set('hot')" [class]="activeFilter() === 'hot' ? 'bg-primary text-white' : 'bg-card dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'" class="px-3 py-1 text-sm font-semibold border border-slate-300 dark:border-slate-600 rounded-full">{{ t.filter_hot() }} ({{filterCounts().hot}})</button>
+    </div>
+
+    @if (leadsWithDetails().length > 0) {
+        @if (filteredLeads().length > 0) {
+            <!-- Leads Table -->
+            <div class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700 overflow-x-auto">
+                <table class="min-w-full divide-y divide-border dark:divide-slate-700">
+                    <thead class="bg-slate-50 dark:bg-slate-900/50">
+                        <tr>
+                            <th scope="col" class="w-2/6 px-6 py-3 text-left text-xs font-medium text-text-secondary dark:text-slate-400 uppercase tracking-wider">{{ t.head_name() }}</th>
+                            <th scope="col" class="w-1/6 px-6 py-3 text-left text-xs font-medium text-text-secondary dark:text-slate-400 uppercase tracking-wider">{{ t.head_owner() }}</th>
+                            <th scope="col" class="w-2/6 px-6 py-3 text-left text-xs font-medium text-text-secondary dark:text-slate-400 uppercase tracking-wider">{{ t.head_next_action() }}</th>
+                            <th scope="col" class="w-1/6 px-6 py-3 text-left text-xs font-medium text-text-secondary dark:text-slate-400 uppercase tracking-wider">{{ t.head_due_date() }}</th>
+                            <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-card dark:bg-slate-800 divide-y divide-border dark:divide-slate-700">
+                        @for(lead of filteredLeads(); track lead.id) {
+                            <tr class="group relative hover:bg-slate-50 dark:hover:bg-slate-700/50" [class]="{
+                                'border-l-4 border-red-500': lead.urgency === 'overdue',
+                                'border-l-4 border-amber-500': lead.urgency === 'due-today',
+                                'border-l-4 border-green-500': lead.urgency === 'on-track',
+                                'border-l-4 border-slate-300 dark:border-slate-600': lead.urgency === 'needs-scheduling',
+                                'border-l-4 border-transparent': lead.urgency === 'completed'
+                            }">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-text-primary dark:text-slate-200">{{ lead.name }}</div>
+                                    <span class="px-2 mt-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                      [class]="lead.origin === 'WhatsApp' ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300' : lead.origin === 'Instagram' ? 'bg-pink-100 text-pink-800 dark:bg-pink-900/40 dark:text-pink-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300'">
+                                      {{ lead.origin }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary dark:text-slate-400">{{ lead.owner }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-text-primary dark:text-slate-300">
+                                    <div class="flex items-center space-x-2">
+                                        <button (click)="handleCompleteAction($event, lead.id)" class="h-5 w-5 rounded-full border-2 flex-shrink-0" [class]="lead.actionCompleted ? 'bg-primary border-primary' : 'border-slate-400 dark:border-slate-500 hover:border-primary'">
+                                            @if(lead.actionCompleted) {
+                                                <svg class="h-full w-full text-white" viewBox="0 0 16 16" fill="currentColor"><path d="M12.207 4.793a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L6.5 9.086l4.293-4.293a1 1 0 0 1 1.414 0z"/></svg>
+                                            }
+                                        </button>
+                                        <span [class]="{'line-through text-text-secondary dark:text-slate-500': lead.actionCompleted}">{{ lead.nextActionText }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold" [class]="{
+                                    'text-red-600 dark:text-red-400': lead.urgency === 'overdue',
+                                    'text-amber-600 dark:text-amber-400': lead.urgency === 'due-today',
+                                    'text-slate-500 dark:text-slate-400': lead.urgency === 'on-track' || lead.urgency === 'needs-scheduling',
+                                    'text-green-600 dark:text-green-400': lead.urgency === 'completed'
+                                }">{{ formatRelativeDate(lead) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex items-center justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button (click)="openDetailSlideover(lead)" class="p-1 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600" [title]="t.action_view_details()"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" /><path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 0 1 0-1.18l.879-1.318A4.002 4.002 0 0 1 4.382 5.5h11.236a4.002 4.002 0 0 1 2.839 1.29l.879 1.318a1.651 1.651 0 0 1 0 1.18l-.879 1.318A4.002 4.002 0 0 1 15.618 14.5H4.382a4.002 4.002 0 0 1-2.839-1.29L.664 10.59Z" clip-rule="evenodd" /></svg></button>
+                                        <button class="p-1 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600" [title]="t.action_message()"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M3.5 2.75a.75.75 0 0 0-1.5 0v14.5a.75.75 0 0 0 1.5 0v-4.392l1.657-.828a.75.75 0 0 0 .343-1.052L4.01 4.512a.75.75 0 0 0-1.052-.343L2 4.828V2.75Z" /><path d="m6.53 3.32-.423.212a.75.75 0 0 0-.343 1.052l1.488 2.976a.75.75 0 0 0 1.052.343l.423-.212a.75.75 0 0 0 .343-1.052L7.582 3.663a.75.75 0 0 0-1.052-.343Z" /><path d="M15.5 2.75a.75.75 0 0 1 1.5 0v14.5a.75.75 0 0 1-1.5 0v-4.392l-1.657-.828a.75.75 0 0 1-.343-1.052l1.488-2.976a.75.75 0 0 1 1.052-.343L18 4.828V2.75Z" /><path d="m13.47 3.32.423.212a.75.75 0 0 1 .343 1.052l-1.488 2.976a.75.75 0 0 1-1.052.343l-.423-.212a.75.75 0 0 1-.343-1.052l1.488-2.976a.75.75 0 0 1 1.052-.343Z" /></svg></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        } @else {
+            <div class="p-8 text-center text-text-secondary dark:text-slate-400 bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700">
+                <h3 class="text-lg font-medium text-text-primary dark:text-slate-200">{{ t.filter_empty_title() }}</h3>
+                <p class="text-sm mt-1">{{ t.filter_empty_subtitle() }}</p>
+                <button (click)="activeFilter.set('all')" class="mt-4 px-3 py-1 text-sm font-semibold bg-primary text-white rounded-full">{{ t.clear_filters() }}</button>
+            </div>
+        }
+    } @else {
+        <div class="p-12 text-center text-text-secondary dark:text-slate-400 bg-card dark:bg-slate-800 rounded-lg shadow-sm border-2 border-dashed border-border dark:border-slate-700">
+            <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m-7.5-2.928A3 3 0 0 1 7.5 12.5m3 3.75a3 3 0 0 1-3-3m.002 3.75a3 3 0 0 0 3-3m-9.75 3.028a9.094 9.094 0 0 1-3.741-.479 3 3 0 0 1 4.682-2.72m-7.5-2.928a3 3 0 0 0 3 3m-3-3a3 3 0 0 0-3-3m.002 3.75a3 3 0 0 1-3-3m9.75 3.028a9.094 9.094 0 0 0 3.741.479 3 3 0 0 0 4.682-2.72m-7.5 2.928a3 3 0 0 1 7.5-.002" /></svg>
+            <h3 class="mt-2 text-lg font-medium text-text-primary dark:text-slate-200">{{ t.empty_title() }}</h3>
+            <p class="text-sm mt-1">{{ t.empty_subtitle() }}</p>
+            <div class="mt-6 flex justify-center gap-x-3">
+                 <button (click)="dataService.seedData()" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium rounded-md hover:bg-slate-200 dark:hover:bg-slate-600">{{ t.seed_data() }}</button>
+                <button (click)="isCreateModalOpen.set(true)" class="px-4 py-2 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary-hover">{{ t.create() }}</button>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Create Lead Modal -->
+@if(isCreateModalOpen()) {
+  <div class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50" (click)="isCreateModalOpen.set(false)">
+    <div class="bg-card dark:bg-slate-800 rounded-lg shadow-xl p-6 w-full max-w-lg mx-4" (click)="$event.stopPropagation()">
+        <h2 class="text-xl font-bold text-text-primary dark:text-slate-100">{{ t.create_modal_title() }}</h2>
+        <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">{{ t.create_modal_subtitle() }}</p>
+      
+        <div class="mt-6 space-y-4">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                    <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">{{ t.create_modal_name_label() }}</label>
+                    <input type="text" [(ngModel)]="newLeadData.name" [placeholder]="t.create_modal_name_placeholder()" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm sm:text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">{{ t.create_modal_origin_label() }}</label>
+                    <select [(ngModel)]="newLeadData.origin" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm sm:text-sm">
+                        @for(origin of origins; track origin) { <option [value]="origin">{{origin}}</option> }
+                    </select>
+                </div>
+            </div>
+             <div>
+                <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">{{ t.create_modal_owner_label() }}</label>
+                <select [(ngModel)]="newLeadData.ownerId" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm sm:text-sm">
+                    @for(user of users(); track user.id) { <option [value]="user.id">{{user.name}}</option> }
+                </select>
+            </div>
+            <div class="border-t border-border dark:border-slate-700 pt-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">{{ t.create_modal_next_action_label() }}</label>
+                        <input type="text" [(ngModel)]="newLeadData.nextActionText" [placeholder]="t.create_modal_next_action_placeholder()" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm sm:text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">{{ t.create_modal_due_date_label() }}</label>
+                        <input type="date" [(ngModel)]="newLeadData.dueDate" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm sm:text-sm">
+                    </div>
+                </div>
+            </div>
+            @if(createError()) {
+                <p class="text-sm text-red-600 dark:text-red-400">{{ createError() }}</p>
+            }
+        </div>
+  
+        <div class="mt-8 flex justify-end space-x-3">
+            <button type="button" (click)="isCreateModalOpen.set(false)" class="bg-card dark:bg-slate-700 py-2 px-4 border border-border dark:border-slate-600 rounded-md text-sm font-medium text-text-primary dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600">{{ t.cancel() }}</button>
+            <button type="button" (click)="handleCreateLead()" class="py-2 px-4 border border-transparent rounded-md text-sm font-medium text-primary-foreground bg-primary hover:bg-primary-hover">{{ t.create_modal_save() }}</button>
+        </div>
+    </div>
+  </div>
+}
+
+<!-- Lead Detail Slide-over -->
+@if(isDetailSlideoverOpen() && selectedLead(); as lead) {
+  <div class="fixed inset-0 z-50 overflow-hidden" (click)="isDetailSlideoverOpen.set(false)">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
+    <div class="fixed inset-y-0 right-0 flex max-w-full pl-10" (click)="$event.stopPropagation()">
+        <div class="w-screen max-w-md">
+            <div class="flex h-full flex-col overflow-y-scroll bg-card dark:bg-slate-800 shadow-xl border-l border-border dark:border-slate-700">
+                <div class="p-6">
+                    <div class="flex items-start justify-between">
+                        <h2 class="text-xl font-bold text-text-primary dark:text-slate-100">{{ lead.name }}</h2>
+                        <button (click)="isDetailSlideoverOpen.set(false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">&times;</button>
+                    </div>
+                    <div class="mt-2 flex items-center gap-x-2">
+                        <span class="px-2 text-xs font-semibold rounded-full" [class]="lead.origin === 'WhatsApp' ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300' : lead.origin === 'Instagram' ? 'bg-pink-100 text-pink-800 dark:bg-pink-900/40 dark:text-pink-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300'">{{ lead.origin }}</span>
+                        <span class="text-xs font-medium text-text-secondary dark:text-slate-400">{{ lead.status }}</span>
+                    </div>
+                </div>
+                <div class="flex-1 p-6 border-y border-border dark:border-slate-700 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">{{ t.create_modal_owner_label() }}</label>
+                        <select [(ngModel)]="lead.ownerId" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm sm:text-sm">
+                            @for(user of users(); track user.id) { <option [value]="user.id">{{user.name}}</option> }
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">{{ t.create_modal_next_action_label() }}</label>
+                        <input type="text" [(ngModel)]="lead.nextActionText" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm sm:text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">{{ t.create_modal_due_date_label() }}</label>
+                        <input type="date" [ngModel]="lead.dueDate | date:'yyyy-MM-dd'" (ngModelChange)="lead.dueDate = $event" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm sm:text-sm">
+                    </div>
+                     <div>
+                        <label class="block text-sm font-medium text-text-secondary dark:text-slate-300">{{ t.detail_notes() }}</label>
+                        <textarea [(ngModel)]="lead.notes" rows="4" [placeholder]="t.detail_notes_placeholder()" class="mt-1 block w-full rounded-md border-border dark:border-slate-600 bg-card dark:bg-slate-700 text-text-primary dark:text-slate-200 shadow-sm sm:text-sm"></textarea>
+                    </div>
+                     <div>
+                        <h3 class="text-sm font-medium text-text-secondary dark:text-slate-300">{{ t.detail_activity() }}</h3>
+                        <ul class="mt-2 space-y-2">
+                           @for(act of lead.activityLog; track act.timestamp) {
+                               <li class="text-xs text-text-secondary dark:text-slate-400">
+                                   {{ act.description }} - <span class="font-medium">{{ act.timestamp | date:'short' }}</span>
+                               </li>
+                           }
+                        </ul>
+                    </div>
+                </div>
+                <div class="p-6 flex justify-end">
+                    <button (click)="handleUpdateLead()" class="py-2 px-4 rounded-md text-sm font-medium text-primary-foreground bg-primary hover:bg-primary-hover">{{ t.detail_save_changes() }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+}

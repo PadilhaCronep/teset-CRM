@@ -1,0 +1,245 @@
+
+<div class="space-y-10">
+  <!-- Header -->
+  <div>
+    <h1 class="text-3xl font-bold text-text-primary dark:text-slate-100">Sales Performance Arena</h1>
+    <p class="mt-1 text-sm text-text-secondary dark:text-slate-400">The command center for sales execution, coaching, and motivation.</p>
+  </div>
+
+  <!-- 1) TEAM MOMENTUM -->
+  <section>
+    <h2 class="text-lg font-semibold text-text-primary dark:text-slate-200 mb-3">Team Momentum</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="bg-card dark:bg-slate-800 p-5 rounded-lg shadow-sm border border-border dark:border-slate-700">
+          <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Total Revenue</h3>
+          <p class="mt-1 text-3xl font-bold text-text-primary dark:text-white">${{ teamMomentum().revenue.toLocaleString() }}</p>
+        </div>
+        <div class="bg-card dark:bg-slate-800 p-5 rounded-lg shadow-sm border border-border dark:border-slate-700">
+          <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Deals Won</h3>
+          <p class="mt-1 text-3xl font-bold text-text-primary dark:text-white">{{ teamMomentum().dealsWon }}</p>
+        </div>
+        <div class="bg-card dark:bg-slate-800 p-5 rounded-lg shadow-sm border border-border dark:border-slate-700">
+          <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Avg. Discipline Score</h3>
+          <p class="mt-1 text-3xl font-bold text-text-primary dark:text-white">{{ teamMomentum().avgDiscipline.toFixed(0) }}</p>
+        </div>
+        <div class="bg-card dark:bg-slate-800 p-5 rounded-lg shadow-sm border border-border dark:border-slate-700">
+          <h3 class="text-sm font-semibold text-text-secondary dark:text-slate-400">Team Streak</h3>
+          <p class="mt-1 text-3xl font-bold text-text-primary dark:text-white">🔥 {{ teamMomentum().teamStreak }} days</p>
+        </div>
+    </div>
+  </section>
+
+  <!-- 2) WEEKLY FOCUS & MANAGER COPILOT -->
+  <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-1 bg-card dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-border dark:border-slate-700">
+      <h2 class="text-xl font-bold text-text-primary dark:text-slate-100">This Week's Focus</h2>
+      <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">Follow-up within 2h of proposal view.</p>
+      <div class="mt-3 w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
+        <div class="bg-primary h-2.5 rounded-full" style="width: 78%"></div>
+      </div>
+      <div class="flex justify-between text-xs font-semibold text-text-secondary dark:text-slate-400 mt-1">
+        <span>78% Adherence</span>
+        <span>3 days left</span>
+      </div>
+    </div>
+    <div class="lg:col-span-2 bg-primary-light/50 dark:bg-slate-800 p-6 rounded-lg border border-primary/20 dark:border-slate-700">
+       <h2 class="text-xl font-bold text-text-primary dark:text-slate-100 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2 text-primary dark:text-indigo-400"><path d="M10 2a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 2ZM10 15a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 15ZM10 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM5.432 4.067a.75.75 0 0 1 1.06-1.06l1.061 1.06a.75.75 0 0 1-1.06 1.06l-1.06-1.06ZM13.48 12.42a.75.75 0 0 1 1.06-1.06l1.06 1.06a.75.75 0 0 1-1.06 1.06l-1.06-1.06ZM2 10a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 2 10ZM15 10a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 15 10ZM5.432 15.933a.75.75 0 0 1-1.06-1.06l1.06-1.061a.75.75 0 1 1 1.06 1.06l-1.06 1.061ZM13.48 7.58a.75.75 0 0 1-1.06-1.06l1.06-1.06a.75.75 0 0 1 1.06 1.06l-1.06 1.06Z" /></svg>
+        Manager Copilot
+      </h2>
+      <p class="text-sm mt-1 text-text-secondary dark:text-slate-300"><b>Top intervention this week:</b> Coach <b class="dark:text-white">{{managerCopilot().top3[0]?.name}}</b> on follow-up discipline. It could recover ${{managerCopilot().top3[0]?.revenue.toLocaleString()}} in stalled deals.</p>
+       <button class="mt-2 text-xs font-bold text-primary dark:text-indigo-400 hover:underline">Start Coaching Plan</button>
+    </div>
+  </section>
+
+  <!-- 3) PERFORMANCE ARENA -->
+  <section>
+    <h2 class="text-lg font-semibold text-text-primary dark:text-slate-200 mb-3">Performance Arena</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for(rep of reps(); track rep.id) {
+        <div (click)="openProfile(rep)" class="bg-card dark:bg-slate-800 p-5 rounded-lg shadow-sm border border-border dark:border-slate-700 cursor-pointer hover:border-primary dark:hover:border-indigo-500 transition-colors duration-200">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center space-x-3">
+              <img [src]="rep.avatar" [alt]="rep.name" class="h-12 w-12 rounded-full">
+              <div>
+                <p class="font-bold text-lg text-text-primary dark:text-slate-100">{{rep.name}}</p>
+                <p class="text-sm font-semibold" [class]="{
+                  'text-yellow-700 dark:text-yellow-500': rep.currentTier === 'Gold',
+                  'text-slate-500 dark:text-slate-400': rep.currentTier === 'Silver',
+                  'text-orange-900 dark:text-orange-400': rep.currentTier === 'Bronze',
+                  'text-primary dark:text-indigo-400': rep.currentTier === 'Elite'
+                }">{{rep.currentTier}} Tier</p>
+              </div>
+            </div>
+             @if(rep.badges.length > 0) {
+              <div class="p-1.5 bg-yellow-100 dark:bg-yellow-900/30 rounded-full" title="{{rep.badges[0]}}">
+                @switch(rep.badges[0]) {
+                  @case('Follow-up Master') {<span>🎯</span>}
+                  @case('Fast Responder') {<span>⚡️</span>}
+                  @case('Negotiation Ninja') {<span>⚔️</span>}
+                }
+              </div>
+            }
+          </div>
+          <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p class="text-text-secondary dark:text-slate-400">Revenue</p>
+              <p class="font-bold text-lg text-text-primary dark:text-slate-200">${{rep.revenue.toLocaleString()}}</p>
+            </div>
+            <div>
+              <p class="text-text-secondary dark:text-slate-400">Follow-up Streak</p>
+              <p class="font-bold text-lg text-text-primary dark:text-slate-200">🔥 {{rep.streaks.followUp}} days</p>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-border dark:border-slate-700">
+             <p class="text-xs font-semibold text-text-secondary dark:text-slate-400">Current Focus</p>
+             <p class="text-sm font-medium text-amber-800 dark:text-amber-300">{{rep.currentFocus}}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- 4) LEADERBOARDS & COACHING CENTER -->
+  <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div>
+      <h2 class="text-lg font-semibold text-text-primary dark:text-slate-200 mb-3">Leaderboards</h2>
+      <div class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700 p-4">
+        <div class="flex items-center border-b border-border dark:border-slate-700 text-sm">
+          <button (click)="activeLeaderboard.set('improvement')" class="px-3 py-2 font-semibold" [class]="activeLeaderboard() === 'improvement' ? 'border-b-2 border-primary text-primary dark:text-indigo-400 dark:border-indigo-400' : 'text-text-secondary dark:text-slate-400'">Top Improvement</button>
+          <button (click)="activeLeaderboard.set('consistency')" class="px-3 py-2 font-semibold" [class]="activeLeaderboard() === 'consistency' ? 'border-b-2 border-primary text-primary dark:text-indigo-400 dark:border-indigo-400' : 'text-text-secondary dark:text-slate-400'">Consistency</button>
+          <button (click)="activeLeaderboard.set('response_time')" class="px-3 py-2 font-semibold" [class]="activeLeaderboard() === 'response_time' ? 'border-b-2 border-primary text-primary dark:text-indigo-400 dark:border-indigo-400' : 'text-text-secondary dark:text-slate-400'">Response Time</button>
+        </div>
+        <ul class="mt-3 space-y-2">
+           @for(rep of leaderboardData(); track rep.id; let i = $index) {
+              <li class="flex items-center justify-between p-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                <div class="flex items-center space-x-3">
+                  <span class="font-bold w-6 text-center text-text-secondary dark:text-slate-400">{{i + 1}}</span>
+                  <img [src]="rep.avatar" [alt]="rep.name" class="h-8 w-8 rounded-full">
+                  <span class="font-semibold text-text-primary dark:text-slate-200">{{rep.name}}</span>
+                </div>
+                 @switch (activeLeaderboard()) {
+                  @case('improvement') {<span class="font-bold text-green-600 dark:text-green-400">+{{rep.weeklyDelta.discipline.toFixed(1)}} pts</span>}
+                  @case('consistency') {<span class="font-bold text-primary dark:text-indigo-400">🔥 {{rep.streaks.followUp}} day streak</span>}
+                  @case('response_time') {<span class="font-bold text-sky-600 dark:text-sky-400">{{rep.avgResponseTime}} min</span>}
+                }
+              </li>
+           }
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h2 class="text-lg font-semibold text-text-primary dark:text-slate-200 mb-3">Coaching Center</h2>
+       <div class="bg-card dark:bg-slate-800 rounded-lg shadow-sm border border-border dark:border-slate-700 p-4">
+        <p class="text-xs font-semibold text-text-secondary dark:text-slate-400 uppercase">Priority Coaching Signals</p>
+         <ul class="mt-3 space-y-2">
+           @for(rep of coachingSignals(); track rep.id) {
+            <li class="flex items-center justify-between p-2 rounded-md bg-amber-50 dark:bg-amber-900/30">
+              <div class="flex items-center space-x-3">
+                 <img [src]="rep.avatar" [alt]="rep.name" class="h-8 w-8 rounded-full">
+                 <div>
+                    <p class="font-semibold text-text-primary dark:text-slate-200">{{rep.name}}</p>
+                    <p class="text-xs font-medium text-amber-800 dark:text-amber-300">Focus: {{rep.currentFocus}}</p>
+                 </div>
+              </div>
+              <button class="text-xs font-bold text-primary dark:text-indigo-400 hover:underline">Start Plan</button>
+            </li>
+           } @empty {
+            <p class="text-sm text-center p-4 text-text-secondary dark:text-slate-400">✅ No priority coaching signals found. Great work!</p>
+           }
+         </ul>
+       </div>
+    </div>
+  </section>
+
+  <!-- REP PROFILE SLIDE-OVER -->
+  @if(isProfileOpen() && selectedRep(); as rep) {
+    <div class="fixed inset-0 z-50 overflow-hidden" (click)="isProfileOpen.set(false)">
+      <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
+      <div class="fixed inset-y-0 right-0 flex max-w-full pl-10" (click)="$event.stopPropagation()">
+          <div class="w-screen max-w-md">
+              <div class="flex h-full flex-col overflow-y-scroll bg-card dark:bg-slate-800 shadow-xl border-l border-border dark:border-slate-700">
+                  <!-- Header -->
+                  <div class="p-6">
+                      <div class="flex items-start justify-between">
+                          <div class="flex items-center space-x-4">
+                            <img [src]="rep.avatar" [alt]="rep.name" class="h-16 w-16 rounded-full">
+                             <div>
+                                <h2 class="text-2xl font-bold text-text-primary dark:text-slate-100">{{ rep.name }}</h2>
+                                <p class="text-lg font-semibold" [class]="{
+                                  'text-yellow-700 dark:text-yellow-500': rep.currentTier === 'Gold',
+                                  'text-slate-500 dark:text-slate-400': rep.currentTier === 'Silver',
+                                  'text-orange-900 dark:text-orange-400': rep.currentTier === 'Bronze',
+                                  'text-primary dark:text-indigo-400': rep.currentTier === 'Elite'
+                                }">{{rep.currentTier}} Tier</p>
+                             </div>
+                          </div>
+                          <button (click)="isProfileOpen.set(false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">&times;</button>
+                      </div>
+                  </div>
+                  <!-- Main Content -->
+                  <div class="flex-1 space-y-6 p-6 border-y border-border dark:border-slate-700">
+                    <!-- Metrics -->
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                      <div><p class="text-sm text-text-secondary dark:text-slate-400">Discipline</p><p class="text-2xl font-bold">{{rep.disciplineScore}}</p></div>
+                      <div><p class="text-sm text-text-secondary dark:text-slate-400">Revenue</p><p class="text-2xl font-bold">${{rep.revenue.toLocaleString()}}</p></div>
+                      <div><p class="text-sm text-text-secondary dark:text-slate-400">Deals Won</p><p class="text-2xl font-bold">{{rep.dealsWon}}</p></div>
+                    </div>
+                    <!-- Badges & Streaks -->
+                    <div>
+                      <p class="text-sm font-semibold text-text-secondary dark:text-slate-400">Badges & Streaks</p>
+                       <div class="mt-2 flex flex-wrap gap-2">
+                        @for(badge of rep.badges; track badge) {<span class="text-xs font-bold bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 px-2 py-1 rounded-full">{{badge}}</span>}
+                        <span class="text-xs font-bold bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300 px-2 py-1 rounded-full">🔥 {{rep.streaks.followUp}}d Streak</span>
+                       </div>
+                    </div>
+                    <!-- Coaching Plan -->
+                    @if(rep.coachingPlan; as plan) {
+                      <div>
+                        <p class="text-sm font-semibold text-text-secondary dark:text-slate-400">7-Day Coaching Plan</p>
+                        <div class="mt-2 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                           <p class="font-semibold text-sm">{{plan.goal}}</p>
+                           <div class="mt-2 w-full bg-slate-200 dark:bg-slate-600 rounded-full h-1.5"><div class="bg-primary h-1.5 rounded-full" [style.width.%]="plan.progress"></div></div>
+                           <div class="mt-2 space-y-1.5">
+                              @for(action of plan.actions; track action.text; let i = $index) {
+                                <div (click)="toggleCoachingAction(rep.id, i)" class="flex items-center cursor-pointer">
+                                  <div class="h-4 w-4 rounded border-2 flex-shrink-0 mr-2" [class]="action.completed ? 'bg-primary border-primary' : 'border-slate-400'">
+                                     @if(action.completed) {<svg class="h-full w-full text-white" viewBox="0 0 16 16" fill="currentColor"><path d="M12.207 4.793a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L6.5 9.086l4.293-4.293a1 1 0 0 1 1.414 0z"/></svg>}
+                                  </div>
+                                  <p class="text-sm" [class]="action.completed ? 'line-through text-text-secondary dark:text-slate-400' : 'text-text-primary dark:text-slate-200'">{{action.text}}</p>
+                                </div>
+                              }
+                           </div>
+                        </div>
+                      </div>
+                    }
+                    <!-- Lucas Coach -->
+                    @if(lucasCoach(); as lucas) {
+                       <div>
+                        <p class="text-sm font-semibold text-text-secondary dark:text-slate-400 flex items-center">
+                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 mr-1.5 text-indigo-400"><path d="M10.03.99c.334.204.535.58.535.99v1.5c0 .41-.201.786-.535.99L5.34 8l4.69 3.53c.334.204.535.58.535.99v1.5c0 .41-.201.786-.535.99L2.84 13.52c-.52.316-1.2-.108-1.2-.72V3.2c0-.612.68-1.036 1.2-.72L10.03.99Z" /></svg>
+                          Lucas Coach says:
+                        </p>
+                        <div class="mt-2 p-4 bg-primary-light/50 dark:bg-slate-700/50 rounded-lg space-y-3">
+                           <p class="text-sm text-text-primary dark:text-slate-200"><b>#1 Bottleneck:</b> {{lucas.bottleneck}}</p>
+                           <p class="text-sm text-text-primary dark:text-slate-200"><b>Recommended Action:</b> {{lucas.action}}</p>
+                           @if(lucas.script) {
+                             <div class="p-2 bg-slate-100 dark:bg-slate-800 rounded">
+                                <p class="text-xs font-mono text-text-secondary dark:text-slate-300">{{lucas.script}}</p>
+                                <button (click)="copyScript(lucas.script)" class="text-xs font-bold text-primary dark:text-indigo-400 hover:underline mt-1">Copy script</button>
+                             </div>
+                           }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  <!-- Actions -->
+                  <div class="p-6 flex justify-end">
+                      <button (click)="isProfileOpen.set(false)" class="bg-primary text-primary-foreground font-semibold px-4 py-2 rounded-md">Close</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  }
+</div>

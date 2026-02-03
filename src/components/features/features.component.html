@@ -1,0 +1,192 @@
+
+<div class="bg-slate-900 text-white min-h-screen">
+  <!-- Header -->
+  <header class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <a routerLink="/" class="flex items-center">
+      <svg class="h-8 w-auto text-indigo-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z"></path></svg>
+      <h1 class="text-xl font-bold ml-2">Revenue OS</h1>
+    </a>
+    <nav class="space-x-6 text-sm font-medium">
+      <a routerLink="/features" routerLinkActive="text-indigo-300" [routerLinkActiveOptions]="{exact: true}" class="hover:text-indigo-300">Funcionalidades</a>
+      <a routerLink="/pricing" routerLinkActive="text-indigo-300" class="hover:text-indigo-300">Preços</a>
+      <button (click)="loginRequest.emit()" class="bg-primary hover:bg-primary-hover px-4 py-2 rounded-md transition-colors">
+        Entrar
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="container mx-auto px-6 pt-20 pb-16 text-center">
+    <h2 class="text-4xl md:text-6xl font-bold leading-tight">
+      Controle total do comercial.<br><span class="text-indigo-400">Execução sem caos.</span>
+    </h2>
+    <p class="mt-6 text-lg text-slate-300 max-w-3xl mx-auto">
+      O Revenue OS organiza leads, força follow-up, acelera propostas e dá previsibilidade de receita — tudo em um fluxo simples.
+    </p>
+    <div class="mt-8 flex justify-center items-center space-x-4">
+      <a routerLink="/pricing" class="bg-primary hover:bg-primary-hover text-lg font-semibold px-8 py-3 rounded-md transition-colors shadow-lg">
+        Ver preços
+      </a>
+      <button (click)="scrollTo('demo')" class="text-slate-300 hover:text-white font-semibold">
+        Ver demo &rarr;
+      </button>
+    </div>
+  </main>
+
+  <!-- Feature Categories -->
+  <section class="py-20 bg-slate-800">
+    <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div class="space-y-2">
+        <h3 class="text-xl font-bold text-white">Captura e Qualificação</h3>
+        <p class="text-slate-400 text-sm">Centralize todos os pontos de entrada e qualifique leads mais rápido.</p>
+        <ul class="text-slate-300 text-sm list-disc list-inside space-y-1 pt-2">
+          <li>Inbox Unificado (WhatsApp, Insta, Site)</li>
+          <li>Qualificação Rápida com Lead Scoring</li>
+          <li>SLA de Primeira Resposta</li>
+        </ul>
+      </div>
+       <div class="space-y-2">
+        <h3 class="text-xl font-bold text-white">Execução e Pipeline</h3>
+        <p class="text-slate-400 text-sm">Garanta que nenhum negócio seja esquecido e mantenha o ritmo.</p>
+        <ul class="text-slate-300 text-sm list-disc list-inside space-y-1 pt-2">
+          <li>Tela "Hoje" com Ações do Dia</li>
+          <li>Pipeline Kanban Visual</li>
+          <li>Alertas de Ações Atrasadas</li>
+        </ul>
+      </div>
+       <div class="space-y-2">
+        <h3 class="text-xl font-bold text-white">Propostas e Fechamento</h3>
+        <p class="text-slate-400 text-sm">Crie e envie propostas em minutos e saiba quando foram abertas.</p>
+        <ul class="text-slate-300 text-sm list-disc list-inside space-y-1 pt-2">
+          <li>Builder de Propostas</li>
+          <li>Tracking de Visualização</li>
+          <li>Templates Reutilizáveis</li>
+        </ul>
+      </div>
+       <div class="space-y-2">
+        <h3 class="text-xl font-bold text-white">Previsibilidade e Gestão</h3>
+        <p class="text-slate-400 text-sm">Tenha uma visão clara da saúde do seu pipeline e da performance da equipe.</p>
+        <ul class="text-slate-300 text-sm list-disc list-inside space-y-1 pt-2">
+          <li>Dashboard Executivo</li>
+          <li>Forecast de Receita</li>
+          <li>Métricas de Disciplina da Equipe</li>
+        </ul>
+      </div>
+       <div class="space-y-2">
+        <h3 class="text-xl font-bold text-white">AI Copilot (Lucas)</h3>
+        <p class="text-slate-400 text-sm">Receba sugestões inteligentes para contornar objeções e fechar mais rápido.</p>
+        <ul class="text-slate-300 text-sm list-disc list-inside space-y-1 pt-2">
+          <li>Sugestão de Próximos Passos</li>
+          <li>Análise de Sentimento</li>
+          <li>Coaching em Tempo Real</li>
+        </ul>
+      </div>
+       <div class="space-y-2">
+        <h3 class="text-xl font-bold text-white">Integrações</h3>
+        <p class="text-slate-400 text-sm">Conecte as ferramentas que você já usa para automatizar o fluxo de trabalho.</p>
+        <ul class="text-slate-300 text-sm list-disc list-inside space-y-1 pt-2">
+          <li>Meta Lead Ads, WhatsApp, Calendly</li>
+          <li>Stripe para Pagamentos</li>
+          <li>Zapier (Em breve)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Demo Section -->
+  <section id="demo" class="py-20">
+    <div class="container mx-auto px-6">
+       <div class="text-center mb-12">
+        <h3 class="text-3xl font-bold">Veja o Revenue OS em Ação</h3>
+        <p class="text-slate-400 mt-2">Menos cliques, mais controle. Um fluxo de trabalho que faz sentido.</p>
+      </div>
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Tabs -->
+        <div class="flex lg:flex-col items-start gap-2">
+          <button (click)="selectTab('execution')" [class]="activeTab() === 'execution' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'" class="w-full text-left p-3 rounded-md font-semibold transition-colors">Execução Diária</button>
+          <button (click)="selectTab('pipeline')" [class]="activeTab() === 'pipeline' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'" class="w-full text-left p-3 rounded-md font-semibold transition-colors">Pipeline Kanban</button>
+          <button (click)="selectTab('proposals')" [class]="activeTab() === 'proposals' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'" class="w-full text-left p-3 rounded-md font-semibold transition-colors">Propostas Inteligentes</button>
+        </div>
+        <!-- Content -->
+        <div class="flex-1 bg-slate-800/50 border border-slate-700 rounded-lg p-8">
+          @if(activeTab() === 'execution') {
+            <div>
+              <h4 class="text-xl font-bold">Sua tela "Hoje"</h4>
+              <p class="text-slate-300 mt-2">Todas as ações do dia — follow-ups, novas conversas, propostas vistas — em um só lugar. Impossível se perder.</p>
+              <div class="mt-4 p-4 border border-slate-700 rounded-lg bg-slate-900/50 h-64">
+                <div class="h-8 w-3/4 bg-slate-700 rounded"></div>
+                <div class="mt-3 h-6 w-1/2 bg-slate-700 rounded"></div>
+              </div>
+            </div>
+          }
+          @if(activeTab() === 'pipeline') {
+            <div>
+              <h4 class="text-xl font-bold">Pipeline Visual</h4>
+              <p class="text-slate-300 mt-2">Arraste e solte negócios entre as fases. Defina a próxima ação a cada movimento para garantir que nada pare.</p>
+              <div class="mt-4 p-4 border border-slate-700 rounded-lg bg-slate-900/50 h-64 flex space-x-4">
+                <div class="w-1/3 bg-slate-700 rounded"></div>
+                <div class="w-1/3 bg-slate-700 rounded"></div>
+                <div class="w-1/3 bg-slate-700 rounded"></div>
+              </div>
+            </div>
+          }
+           @if(activeTab() === 'proposals') {
+            <div>
+              <h4 class="text-xl font-bold">Propostas com Tracking</h4>
+              <p class="text-slate-300 mt-2">Crie propostas a partir de templates e receba alertas assim que o cliente visualizar. O timing perfeito para o follow-up.</p>
+              <div class="mt-4 p-4 border border-slate-700 rounded-lg bg-slate-900/50 h-64">
+                 <div class="h-12 w-full bg-slate-700 rounded"></div>
+                 <div class="mt-3 h-8 w-3/4 bg-slate-700 rounded"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof -->
+  <section class="py-20 bg-slate-800">
+    <div class="container mx-auto px-6 text-center">
+      <h4 class="text-slate-400 font-semibold">Usado por equipes de vendas que valorizam execução</h4>
+      <div class="mt-4 flex justify-center items-center space-x-8 text-xl font-bold text-slate-500">
+        <span>Agência Bold</span>
+        <span>Startup Innovate</span>
+        <span>Creative Co.</span>
+        <span>Solutions BR</span>
+      </div>
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="bg-slate-900 p-6 rounded-lg text-left">
+          <p class="text-slate-300">"O Revenue OS eliminou a necessidade de eu cobrar a equipe sobre follow-ups. O sistema faz isso por eles. Nossa taxa de conversão aumentou 15%."</p>
+          <p class="font-bold mt-4">Julia Mendes</p>
+          <p class="text-sm text-slate-400">Diretora, Agência Bold</p>
+        </div>
+        <div class="bg-slate-900 p-6 rounded-lg text-left">
+          <p class="text-slate-300">"Finalmente um CRM que entende o nosso foco em WhatsApp. A disciplina que ele cria é o maior diferencial. Sabemos exatamente o que vai entrar de receita."</p>
+          <p class="font-bold mt-4">Carlos Ferreira</p>
+          <p class="text-sm text-slate-400">CEO, Startup Innovate</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Final CTA -->
+  <section class="py-20">
+    <div class="container mx-auto px-6 text-center">
+      <h3 class="text-3xl font-bold">Pronto para transformar execução em previsibilidade?</h3>
+      <div class="mt-8 flex justify-center items-center space-x-4">
+        <a routerLink="/pricing" class="bg-primary hover:bg-primary-hover text-lg font-semibold px-8 py-3 rounded-md transition-colors shadow-lg">
+          Ver preços
+        </a>
+        <button (click)="loginRequest.emit()" class="text-slate-300 hover:text-white font-semibold">
+          Entrar
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 border-t border-slate-800 py-8 text-center text-slate-400 text-sm">
+      <p>© 2024 Revenue OS. Todos os direitos reservados.</p>
+  </footer>
+</div>

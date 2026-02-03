@@ -1,0 +1,64 @@
+
+<div class="bg-slate-900 text-white min-h-screen">
+  <!-- Header -->
+  <header class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center">
+      <svg class="h-8 w-auto text-indigo-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z"></path></svg>
+      <h1 class="text-xl font-bold ml-2">Revenue OS</h1>
+    </div>
+    <nav class="space-x-6 text-sm font-medium">
+      <a routerLink="/features" routerLinkActive="text-indigo-300" class="hover:text-indigo-300">Funcionalidades</a>
+      <a routerLink="/pricing" routerLinkActive="text-indigo-300" class="hover:text-indigo-300">Preços</a>
+      <button (click)="loginRequest.emit()" class="bg-primary hover:bg-primary-hover px-4 py-2 rounded-md transition-colors">
+        {{ t_login() }}
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="container mx-auto px-6 pt-20 pb-16 text-center">
+    <h2 class="text-4xl md:text-6xl font-bold leading-tight">
+      {{ t_main_title() }}<br><span class="text-indigo-400">{{ t_main_subtitle() }}</span>
+    </h2>
+    <p class="mt-6 text-lg text-slate-300 max-w-2xl mx-auto">
+      {{ t_description() }}
+    </p>
+    <div class="mt-8">
+      <button (click)="loginRequest.emit()" class="bg-primary hover:bg-primary-hover text-lg font-semibold px-8 py-3 rounded-md transition-colors shadow-lg">
+        {{ t_cta() }}
+      </button>
+    </div>
+  </main>
+
+  <!-- Feature Highlights -->
+  <section class="bg-slate-800 py-20">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12">
+        <h3 class="text-3xl font-bold">{{ t_features_title() }}</h3>
+        <p class="text-slate-400 mt-2">{{ t_features_subtitle() }}</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-slate-900 p-8 rounded-lg">
+          <h4 class="text-xl font-bold">{{ t_feature1_title() }}</h4>
+          <p class="mt-2 text-slate-400">{{ t_feature1_desc() }}</p>
+        </div>
+        <!-- Feature 2 -->
+        <div class="bg-slate-900 p-8 rounded-lg">
+          <h4 class="text-xl font-bold">{{ t_feature2_title() }}</h4>
+          <p class="mt-2 text-slate-400">{{ t_feature2_desc() }}</p>
+        </div>
+        <!-- Feature 3 -->
+        <div class="bg-slate-900 p-8 rounded-lg">
+          <h4 class="text-xl font-bold">{{ t_feature3_title() }}</h4>
+          <p class="mt-2 text-slate-400">{{ t_feature3_desc() }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="bg-slate-900 py-8 text-center text-slate-400 text-sm">
+      <p>{{ t_footer() }}</p>
+  </footer>
+</div>

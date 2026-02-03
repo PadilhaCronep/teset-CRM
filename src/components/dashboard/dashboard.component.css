@@ -1,0 +1,6 @@
+
+.is-dragging {
+  opacity: 0.4;
+  transform: scale(0.98);
+  border-style: dashed;
+}
