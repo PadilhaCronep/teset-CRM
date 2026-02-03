@@ -7,8 +7,8 @@
       <h1 class="text-xl font-bold ml-2">Revenue OS</h1>
     </div>
     <nav class="space-x-6 text-sm font-medium">
-      <a routerLink="/features" routerLinkActive="text-indigo-300" class="hover:text-indigo-300">Funcionalidades</a>
-      <a routerLink="/pricing" routerLinkActive="text-indigo-300" class="hover:text-indigo-300">Preços</a>
+      <a routerLink="/features" routerLinkActive="text-indigo-300" class="hover:text-indigo-300">{{ t_features() }}</a>
+      <a routerLink="/pricing" routerLinkActive="text-indigo-300" class="hover:text-indigo-300">{{ t_pricing() }}</a>
       <button (click)="loginRequest.emit()" class="bg-primary hover:bg-primary-hover px-4 py-2 rounded-md transition-colors">
         {{ t_login() }}
       </button>
